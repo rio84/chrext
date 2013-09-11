@@ -10,7 +10,7 @@
   },
   "content_scripts": [
         {
-            "matches": ["https://www.btc-gbl.com/*","https://btc-gbl.com/"],
+            "matches": ["https://www.btc-gbl.com/*","https://btc-gbl.com/*"],
             "js": ["jquery.js","socket.io.js","t.js","gbl.js"],
             "css":["gbl.css"],
             "run_at": "document_end"
