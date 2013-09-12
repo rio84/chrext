@@ -252,7 +252,7 @@ var MessagingCallQueue={},
 
 
    // log('ssss')
- window.pop=createPopup();
+
    // log('sss')
 
 
@@ -276,4 +276,15 @@ function createSocket(){
     };
 
 }
-createSocket();
+
+if(location.hash=='#keeplogin'){//不断刷新页面，保持登录状态
+    var rndMin=Math.rnd(1,10);
+    console.log('reloading'+rndMin)
+    setTimeout(function(){
+
+        location.reload();
+    },1000*60*rndMin)
+}else{
+    window.pop=createPopup();
+    createSocket();
+}
