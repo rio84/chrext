@@ -256,12 +256,33 @@ var MessagingCallQueue={},
    // log('sss')
 
 
+function createSocketBak(){
+    console.log('bak ready!');
+    var ws = io.connect('http://socketio.mtgox.com/mtgox');
+    ws.onopen = function () {
+        tip('socket back opened!');
+    };
+    ws.onmessage = function (evt) {
+        // console.log('mms ')
+        // var received_msg = evt.data;
+        messagingCall(JSON.parse(evt.data));
 
+    };
+    ws.onclose = function () {
+        tip('socket bak closed!');
+        createSocket();
+
+    }; // websocket is closed.
+    ws.onerror=function(){
+        createSocket();
+        tip('socket error!正尝试重新连接，如不行刷新页面再试.. ');
+    };
+}
 function createSocket(){
 
     var ws = new WebSocket("ws://websocket.mtgox.com/mtgox?Currency=USD");
     ws.onopen = function () {
-        tip('socket opened!');
+        tip('the fucking socket opened!');
     };
     ws.onmessage = function (evt) {
        // console.log('mms ')
@@ -269,7 +290,10 @@ function createSocket(){
         messagingCall(JSON.parse(evt.data));
 
     };
-    ws.onclose = function () { tip('socket closed!');}; // websocket is closed.
+    ws.onclose = function () {
+        tip('socket closed! recreating');
+        createSocket();
+    }; // websocket is closed.
     ws.onerror=function(){
         createSocket();
         tip('socket error!正尝试重新连接，如不行刷新页面再试.. ');
@@ -287,4 +311,16 @@ if(location.hash=='#keeplogin'){//不断刷新页面，保持登录状态
 }else{
     window.pop=createPopup();
     createSocket();
+   // listenMsg();
+}
+function listenMsg(){
+    tip('listening msg');
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse) {
+
+            messagingCall(JSON.parse(request));
+        });
+
+
+
 }
